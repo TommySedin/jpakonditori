@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+<h:body>
+<h:form id="bakeryForm">
+	<p:dataTable
+			id="pastryTable"
+			value="#{bakeryBean.soldPastries}"
+			var="p"
+			editable="true"
+			editMode="cell"
+			sortBy="#{p.pastry.name}"
+			
+			scrollable="false"
+			
+			selection="#{bakeryBean.selectedPastry}"
+			rowKey="#{p}"
+			selectionMode="single">
+
+		<p:ajax
+			event="rowSelect"
+			update=":bakeryForm:pastryDialog"
+			onstart="PF('pastryDialog').show()"/>
+
+		<f:facet name="header">Bakverk</f:facet>
+		<p:column headerText="Namn">
+			<h:outputText value="#{p.pastry.name}" />
+		</p:column>
+		<p:column headerText="Antal sålda">
+			<f:facet name="footer">
+				<p:outputPanel style="text-align: right;">Summa:</p:outputPanel>
+			</f:facet>
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{p.units}" />
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText value="#{p.units}">
+						<p:ajax update="pastryTable"/>
+					</h:inputText>
+				</f:facet>
+			</p:cellEditor>
+		</p:column>
+		<p:column headerText="Inkomst">
+			<f:facet name="footer">
+				<p:outputPanel style="text-align: left;">
+					<h:outputText id="pastrysum" value="#{bakeryBean.sumSoldPastries}"/>
+				</p:outputPanel>
+			</f:facet>
+			<h:outputText id="inkomst" value="#{p.units * p.pastry.sellPrice}">
+				<f:convertNumber type="currency" currencySymbol="kr"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+
+	<p:separator/>
+
+	<p:messages for="" autoUpdate="true"/>
+	<p:dataTable id="employeeTable" value="#{bakeryBean.employees}" var="e" editable="true" editMode="cell">
+		<f:facet name="header">Anställda</f:facet>
+		<p:column headerText="Namn">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{e.name}" />
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText id="employeeName" value="#{e.name}">
+						<p:ajax update="employeeTable"/>
+					</h:inputText>
+				</f:facet>
+			</p:cellEditor>
+			<f:facet name="footer">
+				<p:outputPanel style="text-align: left;">
+					<p:commandLink
+							value="+"
+							action="#{bakeryBean.newEmployee}"
+							update="employeeTable"/>
+				</p:outputPanel>
+			</f:facet>
+		</p:column>
+		<p:column headerText="Lön">
+			<p:cellEditor>
+				<f:facet name="output">
+					<h:outputText value="#{e.salary}"/>
+				</f:facet>
+				<f:facet name="input">
+					<h:inputText value="#{e.salary}">
+						<p:ajax event="change" listener="#{bakeryBean.saveEmployee(e)}" update="employeeTable"/>
+					</h:inputText>
+				</f:facet>
+			</p:cellEditor>
+			<f:facet name="footer">
+				<p:outputPanel style="text-align: left;">
+					<h:outputText id="sumsalary" value="#{bakeryBean.sumSalaries}"/>
+				</p:outputPanel>
+			</f:facet>
+		</p:column>
+		<p:column headerText="Arbetsgivaravgift">
+			<h:outputText id="agavgift" value="#{e.getEmployersFee()}" />
+			<f:facet name="footer">
+				<p:outputPanel style="text-align: left;">
+					<h:outputText id="sumagavgift" value="#{bakeryBean.sumEmployersFees}"/>
+				</p:outputPanel>
+			</f:facet>
+		</p:column>
+		<p:column headerText="Fackavgifter">
+			<h:outputText id="fackavgift" value="#{e.getUnionFee()}" />
+			<f:facet name="footer">
+				<p:outputPanel style="text-align: left;">
+					<h:outputText id="sumunion" value="#{bakeryBean.sumUnionFees}"/>
+				</p:outputPanel>
+			</f:facet>
+		</p:column>
+	</p:dataTable>
+
+	<p:dialog
+			header="#{bakeryBean.selectedPastry.pastry.name}"
+			id="pastryDialog"
+			width="350"
+			resizable="false"
+			widgetVar="pastryDialog"
+			dynamic="true">
+		<p:dataTable
+			value="#{bakeryBean.selectedPastry.pastry.ingredients}"
+			var="i">
+			<h:outputText value="#{bakeryBean.selectedPastry.pastry.name}" />
+			<p:column headerText="Ingrediens"><h:outputText value="#{i.ingredient.name}"/></p:column>
+			<p:column headerText="Mängd"><h:outputText value="#{i.units}"/></p:column>
+		</p:dataTable>
+	</p:dialog>
+</h:form>
+</h:body>
+</html>
