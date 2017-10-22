@@ -32,6 +32,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>mvnjee</finalName>
+		<finalName>jpakonditori</finalName>
 	</build>
 </project>
