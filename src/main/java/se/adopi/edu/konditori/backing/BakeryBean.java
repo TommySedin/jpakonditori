@@ -1,62 +1,64 @@
 package se.adopi.edu.konditori.backing;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import se.adopi.edu.konditori.Pastry;
-import se.adopi.edu.konditori.SoldPastry;
-import se.adopi.edu.konditori.jpa.JPAEmployeeFacade;
-import se.adopi.edu.konditori.jpa.entities.JPAEmployee;
+import se.adopi.edu.konditori.entities.Employee;
+import se.adopi.edu.konditori.entities.Pastry;
+import se.adopi.edu.konditori.entities.PastrySale;
+import se.adopi.edu.konditori.entities.facades.EmployeeFacade;
+import se.adopi.edu.konditori.entities.facades.PastryFacade;
+import se.adopi.edu.konditori.entities.facades.PastrySaleFacade;
 
 @Named
 @ViewScoped
 public class BakeryBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@EJB
-	private JPAEmployeeFacade employeeEJB;
-	private List<JPAEmployee> employees;
+	@EJB private EmployeeFacade employeeEJB;
+	@EJB private PastryFacade pastryEJB;
+	@EJB private PastrySaleFacade saleEJB;
+
+	private List<Employee> employees;
+	private List<PastrySale> sales;	
 
 
-	@Inject
-	private List<Pastry> pastryTypes;
-	private List<SoldPastry> soldPastries;	
-	private SoldPastry selectedPastry;
-
-
-	public List<SoldPastry> getSoldPastries() {
-		if (soldPastries == null) {
-			soldPastries = new ArrayList<>();
-			for (Pastry p : pastryTypes) {
-				soldPastries.add(new SoldPastry(p, (int) (Math.random() * 10)));
-			}
+	public List<PastrySale> getSales() {
+		if (sales == null) {
+			sales = saleEJB.findAll();
 		}
-		return soldPastries;
+		return sales;
+	}
+	public void newSale() {
+		PastrySale s = new PastrySale();
+		s.setPastry(pastryEJB.find(1)); //Default to first pastry
+		saleEJB.create(s);
+		sales.add(s);
+	}
+	public void saveSale(PastrySale s) {
+		saleEJB.edit(s);
+	}
+	public List<Pastry> getPastries() {
+		return pastryEJB.findAll();
 	}
 
 	public float getSumSoldPastries() {
 		float sum = 0;
-		for (SoldPastry sp : soldPastries) {
-			sum += sp.getUnits() * sp.getPastry().getSellPrice();
+		for (PastrySale ps : getSales()) {
+			if (ps.getPastry() != null) {
+				sum += ps.getAmount() * ps.getPastry().getSellPrice();
+			}
 		}
 		return sum;
 	}
 
-	public SoldPastry getSelectedPastry() {
-		return selectedPastry;
-	}
-	public void setSelectedPastry(SoldPastry selectedPastry) {
-		this.selectedPastry = selectedPastry;
-	}
 
-
-	public List<JPAEmployee> getEmployees() {
+	public List<Employee> getEmployees() {
 		if (employees == null) {
 			employees = employeeEJB.findAll();
 		}
@@ -64,31 +66,31 @@ public class BakeryBean implements Serializable {
 	}
 	
 	public void newEmployee() {
-		JPAEmployee e = new JPAEmployee("", 0);
+		Employee e = new Employee("", 0);
 		employeeEJB.create(e);
 		employees.add(e);
 	}
-	public void saveEmployee(JPAEmployee e) {
+	public void saveEmployee(Employee e) {
 		employeeEJB.edit(e);
 	}
 	
 	public float getSumSalaries() {
 		float result = 0;
-		for (JPAEmployee e : getEmployees()) {
+		for (Employee e : getEmployees()) {
 			result += e.getSalary();
 		}
 		return result;
 	}
 	public float getSumEmployersFees() {
 		float result = 0;
-		for (JPAEmployee e : getEmployees()) {
+		for (Employee e : getEmployees()) {
 			result += e.getEmployersFee();
 		}
 		return result;
 	}
 	public float getSumUnionFees() {
 		float result = 0;
-		for (JPAEmployee e : getEmployees()) {
+		for (Employee e : getEmployees()) {
 			result += e.getUnionFee();
 		}
 		return result;
@@ -96,4 +98,6 @@ public class BakeryBean implements Serializable {
 	public float getTotalEmployeeCosts() {
 		return getSumSalaries() + getSumEmployersFees() + getSumUnionFees();  
 	}
+
+	public PastryFacade getPastryEJB() { return pastryEJB; }
 }

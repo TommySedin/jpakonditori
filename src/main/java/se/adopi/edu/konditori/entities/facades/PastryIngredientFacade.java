@@ -1,13 +1,13 @@
-package se.adopi.edu.konditori.jpa;
+package se.adopi.edu.konditori.entities.facades;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import se.adopi.edu.konditori.jpa.entities.JPAEmployee;
+import se.adopi.edu.konditori.entities.PastryIngredient;
 
 @Stateless
-public class JPAEmployeeFacade extends AbstractFacade<JPAEmployee> {
+public class PastryIngredientFacade extends AbstractFacade<PastryIngredient> {
 	@PersistenceContext(unitName="konditori")
 	private EntityManager em;
 
@@ -16,7 +16,7 @@ public class JPAEmployeeFacade extends AbstractFacade<JPAEmployee> {
 		return em;
 	}
 
-	public JPAEmployeeFacade() {
-		super(JPAEmployee.class);
+	public PastryIngredientFacade() {
+		super(PastryIngredient.class);
 	}
 }

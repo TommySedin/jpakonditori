@@ -1,4 +1,4 @@
-package se.adopi.edu.konditori.jpa;
+package se.adopi.edu.konditori.entities.facades;
 
 import java.util.List;
 

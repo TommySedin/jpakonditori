@@ -1,20 +1,13 @@
-package se.adopi.edu.konditori.jpa.entities;
+package se.adopi.edu.konditori.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-
-/*
- * Borde egentligen hetat Employee för att matcha DB-tabellnamnet,
- * men namnkrocken med interfacet blev förvirrande.
- */
 
 @Entity
-@Table(name="employee")
-public class JPAEmployee {
+public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int employeeid;
@@ -29,8 +22,8 @@ public class JPAEmployee {
 	@Column
 	private float salary;
 
-	public JPAEmployee() {}
-	public JPAEmployee(String name, float salary) {
+	public Employee() {}
+	public Employee(String name, float salary) {
 		this.name = name;
 		this.salary = salary;
 	}
