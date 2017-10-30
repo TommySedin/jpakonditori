@@ -1,18 +1,11 @@
 package se.adopi.edu.konditori.entities.converters;
 
-import java.io.Serializable;
-
-import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
-
 import se.adopi.edu.konditori.backing.BakeryBean;
 import se.adopi.edu.konditori.entities.Pastry;
-import se.adopi.edu.konditori.entities.facades.PastryFacade;
 
 @FacesConverter(forClass=Pastry.class)
 public class PastryConverter implements Converter {

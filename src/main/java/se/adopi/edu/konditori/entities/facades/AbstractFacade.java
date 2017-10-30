@@ -2,6 +2,7 @@ package se.adopi.edu.konditori.entities.facades;
 
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 
 public abstract class AbstractFacade<T> {
