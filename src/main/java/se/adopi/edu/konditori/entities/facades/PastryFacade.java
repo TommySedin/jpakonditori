@@ -5,7 +5,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import se.adopi.edu.konditori.entities.Pastry;
-import se.adopi.edu.konditori.entities.PastrySale;
 
 @Stateless
 public class PastryFacade extends AbstractFacade<Pastry> {

@@ -28,9 +28,27 @@ public class PastryIngredient {
 	public int getContentId() { return contentid; }
 	public void setContentId(int contentId) { this.contentid = contentId; }
 	public Pastry getPastry() { return pastry; }
-	public void setPastry(Pastry pastry) { this.pastry = pastry; }
+	public void setPastry(Pastry newpastry) {
+		if (this.pastry != null) {
+			this.pastry.getIngredients().remove(this);
+		}
+		this.pastry = newpastry;
+		if (!this.pastry.getIngredients().contains(this)) {
+			this.pastry.getIngredients().add(this);
+		}
+	}
 	public Ingredient getIngredient() { return ingredient; }
 	public void setIngredient(Ingredient ingredient) { this.ingredient = ingredient; }
 	public float getAmount() { return amount; }
 	public void setAmount(float amount) { this.amount = amount; }
 }
+
+
+
+
+
+
+
+	
+	
+	
