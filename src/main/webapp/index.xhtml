@@ -65,7 +65,19 @@
 					</p:outputPanel>
 				</f:facet>
 			</p:column>
+			<p:column headerText="Ingredienskostnad">
+				<h:outputText value="#{sale.amount * sale.pastry.bakeCost}">
+					<f:convertNumber type="currency" currencySymbol="kr" />
+				</h:outputText>
+
+				<f:facet name="footer">
+					<p:outputPanel style="text-align: left;">
+						<h:outputText value="#{bakeryBean.sumSoldPastriesBakeCost}" />
+					</p:outputPanel>
+				</f:facet>
+			</p:column>
 		</p:dataTable>
+		<p:commandLink value="Uppdatera grossistpriser" action="#{bakeryBean.updateIngredientCosts}" ajax="false" partialSubmit="false"/>
 
 		<p:separator />
 
@@ -87,7 +99,7 @@
 				<f:facet name="footer">
 					<p:outputPanel style="text-align: left;">
 						<p:commandLink value="+" action="#{bakeryBean.newEmployee}"
-							update="employeeTable" />
+							update="employeeTable" rendered="#{request.isUserInRole('admin')}"/>
 					</p:outputPanel>
 				</f:facet>
 			</p:column>
@@ -127,7 +139,6 @@
 				</f:facet>
 			</p:column>
 		</p:dataTable>
-
 	</h:form>
 </h:body>
 </html>

@@ -36,6 +36,13 @@ public class Pastry {
 	public void setSellPrice(float sellprice) { this.sellprice = sellprice; }
 	public List<PastryIngredient> getIngredients() { return ingredients; }
 	public void setIngredients(List<PastryIngredient> ingredients) { this.ingredients = ingredients; }
+	public float getBakeCost() {
+		float result = 0;
+		for (PastryIngredient i : getIngredients()) {
+			result += i.getAmount() * i.getIngredient().getPricePerUnit();
+		}
+		return result;
+	}
 
 	@Override
 	public boolean equals(Object other) {
